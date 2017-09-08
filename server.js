@@ -30,10 +30,12 @@
 
 
 const express = require('express');
-let request = require('request');
+const request = require('request');
 const mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 const app = express();
+
+var port = process.env.PORT || 8080;
 
 const key = '8f0224df-8487-486a-9e37-1e38a888ef99';
 const endpoint = "https://battlefieldtracker.com/bf1/";
@@ -45,7 +47,6 @@ app.use(bodyParser.json());
 mongoose.connect('mongodb://teamnutella:G#6RerAV3tam@ds127034.mlab.com:27034/heroku_qg6dbqvh');
 
 // MODELS
-
 var Nutella     = require('./app/models/nutella');
 var Member     = require('./app/models/member');
 
