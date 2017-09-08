@@ -17,7 +17,7 @@
     "mongodb": "^2.2.30",
     "mongoose": "^4.11.4",
     "body-parser": "~1.0.1",
-    "request": "^2.81.0",
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "request": "^2.81.0",
