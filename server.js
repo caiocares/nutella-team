@@ -1,44 +1,11 @@
-//const express = require('express');
-//const battlefieldStats = require('battlefield-stats-express');
-//const app = express();
-// 
-//// Get or use your key from https://battlefieldtracker.com/site-api` 
-//const bfs = battlefieldStats('8f0224df-8487-486a-9e37-1e38a888ef99');
-//
-//var port = process.env.PORT || 8080;
-//
-//app.use('/api', bfs);
-//
-//// DATABASE
-//var mongoose = require('mongoose');
-//mongoose.connect('mongodb://teamnutella:G#6RerAV3tam@ds127034.mlab.com:27034/heroku_qg6dbqvh');
-//
-//
-//
-//
-//app.get('')
-//
-//
-// 
-//
-//app.listen(port);
-//
-//
-
-
-
-
-
 const express = require('express');
 const request = require('request');
 const mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+const moment = require('moment');
+let bodyParser = require('body-parser');
+let rp = require('request-promise');
+
 const app = express();
-
-var port = process.env.PORT || 8080;
-
-const key = '8f0224df-8487-486a-9e37-1e38a888ef99';
-const endpoint = "https://battlefieldtracker.com/bf1/";
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -49,17 +16,21 @@ mongoose.connect('mongodb://teamnutella:G#6RerAV3tam@ds127034.mlab.com:27034/her
 // MODELS
 var Nutella     = require('./app/models/nutella');
 var Member     = require('./app/models/member');
+var Stats     = require('./app/models/stats');
 
+// FUNCTIONS
+var stats     = require('./app/functions/stats');
 
+const key = '8f0224df-8487-486a-9e37-1e38a888ef99';
+const endpoint = "https://battlefieldtracker.com/bf1/";
 
 // ROUTES
 var router = express.Router();
 
 /* NUTELLA */
-
 router.route('/nutella')
   .post(function(req, res) {
-    let nut = new Nutella(); 
+    let nut = new Nutella();
   
     nut.name = req.body.psnname;
     nut.position = req.body.position;
@@ -81,157 +52,90 @@ router.route('/nutella')
     });
   });
 
-
 /* SPECIFY MEMBER */
 router.route('/member/:name')
   .get(function(req, res){
-//    console.log(req.params.name);
   
-    let userData = {};
-  
-    
-  
-    // BASIC STATS
-    request({
-      method: 'GET',
-      url: `${endpoint}api/Stats/BasicStats?platform=2&displayName=${req.params.name}`,
-      headers: {
-        'TRN-Api-Key': key
-      }}, function (error, response, body) {
-      
-      if(response.statusCode == 200) {
-        
-        let serverData = JSON.parse(body);
-        let data = serverData.result;
-      
-        userData.rank = {
-          level: data.rank.number,
-          progress: {
-            current: data.rankProgress.current,
-            total: data.rankProgress.total
-          }
-        };
-        
-        userData.stats = {
-          kills: data.kills,
-          deaths: data.deaths,
-          roundsPlayed: (data.wins + data.losses),
-          wins: data.wins,
-          losses: data.losses,
-          timePlayed: data.timePlayed
-        };
-        
-        // DETAIL STATS
-        request({
-          method: 'GET',
-          url: `${endpoint}api/Stats/DetailedStats?platform=2&displayName=${req.params.name}`,
-          headers: {
-            'TRN-Api-Key': key
-          }}, function (error, response, body) {
-
-          if(response.statusCode == 200) {
-
-            let serverData = JSON.parse(body);
-            let data = serverData.result;
-
-            userData.detailed = {
-              flagsCaptured: data.flagsCaptured,
-              flagsDefended: data.flagsDefended,
-              favoriteClass: data.favoriteClass,
-              dogtagsTaken: data.dogtagsTaken,
-              headShots: data.headShots,
-              longestHS: data.longestHeadShot,
-              killAssists: data.killAssists,
-              heals: data.heals,
-              revives: data.revives,
-              suppressionAssist: data.suppressionAssist,
-              repairs: data.repairs,
-              classes: {
-                assault: {
-                  kills: data.kitStats[0].kills,
-                  score: data.kitStats[0].score,
-                  time: data.kitStats[0].secondsAs,
-                },
-                medic: {
-                  kills: data.kitStats[1].kills,
-                  score: data.kitStats[1].score,
-                  time: data.kitStats[1].secondsAs,
-                },
-                scout: {
-                  kills: data.kitStats[2].kills,
-                  score: data.kitStats[2].score,
-                  time: data.kitStats[2].secondsAs,
-                },
-                support: {
-                  kills: data.kitStats[3].kills,
-                  score: data.kitStats[3].score,
-                  time: data.kitStats[3].secondsAs,
-                },
-                cavalry: {
-                  kills: data.kitStats[4].kills,
-                  score: data.kitStats[4].score,
-                  time: data.kitStats[4].secondsAs,
-                },
-                tanker: {
-                  kills: data.kitStats[5].kills,
-                  score: data.kitStats[5].score,
-                  time: data.kitStats[5].secondsAs,
-                },
-                pilot: {
-                  kills: data.kitStats[6].kills,
-                  score: data.kitStats[6].score,
-                  time: data.kitStats[6].secondsAs,
-                }
-              }
-            };
-          }
-          res.json(userData);
-        });
-        
-        
+    var options = {
+      basic: {
+        method: 'GET',
+        url: `${endpoint}api/Stats/BasicStats?platform=2&displayName=${req.params.name}`,
+        headers: {
+          'TRN-Api-Key': key
+        }
+      },
+      detailed: {
+        method: 'GET',
+        url: `${endpoint}api/Stats/DetailedStats?platform=2&displayName=${req.params.name}`,
+        headers: {
+          'TRN-Api-Key': key
+        }
       }
-    });
-  
-    
-    
-    
-  
-  });
-
-//router.route('/member/cron')
-
-
-
-
-
-
-app.get('/stats/:basic/:name', function(req, res){
-  let url = null;
-  switch(req.params.basic){
-    case 'basic': 
-      url = `${endpoint}api/Stats/BasicStats?platform=2&displayName=${req.params.name}`;
-      break;
-    case 'detailed':
-      url = `${endpoint}api/Stats/DetailedStats?platform=2&displayName=${req.params.name}`;
-  }
-  
-  request({
-    method: 'GET',
-    url: url,
-    headers: {
-      'TRN-Api-Key': key
-    }}, function (error, response, body) {
-    
-    
-    if(response.statusCode == 200) {
-      res.json(JSON.parse(body));
-      return;
     }
     
-    res.json({successful: false});
+    var user = [];
+    
+    var basic = rp(options.basic).then(function(response){
+      user.push(stats.basic(response));
+    });
+  
+    var detailed = rp(options.detailed).then(function(response){
+       user.push(stats.detailed(response));
+    });
+  
+    Promise.all([basic, detailed]).then(function(results) {
+      res.json(user);
+    });
   });
-});
 
+router.route('/cron')
+  .post(function(req, res){
+    var query = Nutella.find({});
+    query.exec(function (err, nutellas) {
+      if(nutellas.length){
+        
+        (async function loop() {
+          for(let i = 0; i < nutellas.length; i++) {
+              
+            var options = {
+              method: 'GET',
+              url: `${endpoint}api/Stats/BasicStats?platform=2&displayName=${nutellas[i].name}`,
+              headers: {
+                'TRN-Api-Key': key
+              }
+            }
+              
+            await 
+              rp(options).then(function(response){
+                var server = JSON.parse(response);
+                if(server.successful){
+                  let data = stats.basic(response);
+                  let userStats = new Stats();
+                  userStats.date = moment(new Date()).format("YYYY/MM/DD");
+                  userStats.user.userId = nutellas[i]._id;
+                  userStats.user.name = nutellas[i].name;
+                  userStats.user.kills = data.stats.kills;
+                  userStats.user.deaths = data.stats.deaths;
+                  
+                  userStats.save(function(err) {
+                    if (err){res.send(err);}      
+                  });
+                  
+                }
+              }).catch(function(err){
+                
+              });
+              
+              if(i == (nutellas.length - 1)){
+
+                res.json('stats created');
+
+              }
+            }
+        })();
+      }      
+    });
+  });
 
 app.use('/api', router);
 app.listen(port);

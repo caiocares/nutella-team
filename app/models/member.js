@@ -2,10 +2,10 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var MemberSchema   = new Schema({
-  data: Date,
+  date: String,
   kills: Number,
   death: Number,
-  roundsPlayed: Number
+  userId: String
 });
 
 module.exports = mongoose.model('Member', MemberSchema);
