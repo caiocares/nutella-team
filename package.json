@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Get NUT stats",
   "engines": {
-    "node": "6.11.1"
+    "node": "8.4.0"
   },
   "main": "server.js",
   "scripts": {
