@@ -11,12 +11,13 @@
     "test": "node test.js"
   },
   "dependencies": {
+    "battlefield-stats-express": "^1.0.1",
+    "body-parser": "~1.0.1",
     "ejs": "2.5.6",
     "express": "4.15.2",
-    "battlefield-stats-express": "^1.0.1",
+    "moment": "^2.18.1",
     "mongodb": "^2.2.30",
     "mongoose": "^4.11.4",
-    "body-parser": "~1.0.1",
     "request": "^2.81.0"
   },
   "devDependencies": {
