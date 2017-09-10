@@ -137,6 +137,15 @@ router.route('/cron')
     });
   });
 
+router.route('/cron/delete')
+  .get(function(req, res){
+    var deleteDates = moment(new Date()).subtract(5, 'd');
+  
+    var remove = Stats.remove({ "date" : deleteDates });
+    remove.exec();
+    res.json('iuhul');
+  });
+
 app.use('/api', router);
 
 var port = process.env.PORT || 8080;
