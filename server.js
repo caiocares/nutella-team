@@ -89,7 +89,7 @@ router.route('/member/:name')
   });
 
 router.route('/cron')
-  .post(function(req, res){
+  .get(function(req, res){
     var query = Nutella.find({});
     query.exec(function (err, nutellas) {
       if(nutellas.length){
