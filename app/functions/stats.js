@@ -10,7 +10,8 @@ module.exports = {
         progress: {
           current: data.rankProgress.current,
           total: data.rankProgress.total
-        }
+        },
+        image: data.rank.imageUrl.replace('[BB_PREFIX]', serverData.bbPrefix)
       };
 
       userData.stats = {
