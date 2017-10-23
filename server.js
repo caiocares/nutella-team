@@ -88,6 +88,17 @@ router.route('/member/:name')
     });
   });
 
+router.route('/member/:name/graph')
+  .get(function(req, res){
+    Stats.find(function(err, response) {
+      if (err) {
+        res.send(err);
+      }    
+    
+      res.json(response);
+    });
+  });
+
 router.route('/cron')
   .get(function(req, res){
     var query = Nutella.find({});
