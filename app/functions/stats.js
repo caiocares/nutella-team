@@ -46,42 +46,83 @@ module.exports = {
         repairs: data.repairs,
         classes: {
           assault: {
-            kills: data.kitStats[0].kills,
-            score: data.kitStats[0].score,
-            time: data.kitStats[0].secondsAs,
+            kills: null,
+            score: null,
+            time: null,
           },
           medic: {
-            kills: data.kitStats[1].kills,
-            score: data.kitStats[1].score,
-            time: data.kitStats[1].secondsAs,
+            kills: null,
+            score: null,
+            time: null,
           },
           scout: {
-            kills: data.kitStats[2].kills,
-            score: data.kitStats[2].score,
-            time: data.kitStats[2].secondsAs,
+            kills: null,
+            score: null,
+            time: null,
           },
           support: {
-            kills: data.kitStats[3].kills,
-            score: data.kitStats[3].score,
-            time: data.kitStats[3].secondsAs,
+            kills: null,
+            score: null,
+            time: null,
           },
           cavalry: {
-            kills: data.kitStats[4].kills,
-            score: data.kitStats[4].score,
-            time: data.kitStats[4].secondsAs,
+            kills: null,
+            score: null,
+            time: null,
           },
           tanker: {
-            kills: data.kitStats[5].kills,
-            score: data.kitStats[5].score,
-            time: data.kitStats[5].secondsAs,
+            kills: null,
+            score: null,
+            time: null,
           },
           pilot: {
-            kills: data.kitStats[6].kills,
-            score: data.kitStats[6].score,
-            time: data.kitStats[6].secondsAs,
+            kills: null,
+            score: null,
+            time: null,
           }
         }
-    }
+      }
+      
+      for(var i = 0; i < data.kitStats.length; i++) {
+        switch(data.kitStats[i].prettyName) {
+          case 'ASSAULT': 
+            userData.detailed.classes.assault.kills = data.kitStats[i].kills;
+            userData.detailed.classes.assault.score = data.kitStats[i].score;
+            userData.detailed.classes.assault.time = data.kitStats[i].secondsAs;
+          break;
+          case 'SUPPORT': 
+            userData.detailed.classes.support.kills = data.kitStats[i].kills;
+            userData.detailed.classes.support.score = data.kitStats[i].score;
+            userData.detailed.classes.support.time = data.kitStats[i].secondsAs;
+          break;
+          case 'MEDIC': 
+            userData.detailed.classes.medic.kills = data.kitStats[i].kills;
+            userData.detailed.classes.medic.score = data.kitStats[i].score;
+            userData.detailed.classes.medic.time = data.kitStats[i].secondsAs;
+          break;
+          case 'SCOUT': 
+            userData.detailed.classes.scout.kills = data.kitStats[i].kills;
+            userData.detailed.classes.scout.score = data.kitStats[i].score;
+            userData.detailed.classes.scout.time = data.kitStats[i].secondsAs;
+          break;
+          case 'PILOT': 
+            userData.detailed.classes.pilot.kills = data.kitStats[i].kills;
+            userData.detailed.classes.pilot.score = data.kitStats[i].score;
+            userData.detailed.classes.pilot.time = data.kitStats[i].secondsAs;
+          break;
+          case 'TANKER': 
+            userData.detailed.classes.tanker.kills = data.kitStats[i].kills;
+            userData.detailed.classes.tanker.score = data.kitStats[i].score;
+            userData.detailed.classes.tanker.time = data.kitStats[i].secondsAs;
+          break;
+          case 'CAVALRY': 
+            userData.detailed.classes.cavalry.kills = data.kitStats[i].kills;
+            userData.detailed.classes.cavalry.score = data.kitStats[i].score;
+            userData.detailed.classes.cavalry.time = data.kitStats[i].secondsAs;
+          break;
+          
+        }
+      }
       
       return userData;
     }
