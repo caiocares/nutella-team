@@ -143,7 +143,7 @@ router.route('/cron/delete')
   
     var remove = Stats.remove({ "date" : deleteDates });
     remove.exec();
-    res.json('iuhul');
+    res.json('stats removed');
   });
 
 

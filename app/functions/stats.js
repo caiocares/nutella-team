@@ -120,7 +120,6 @@ module.exports = {
             userData.detailed.classes.cavalry.score = data.kitStats[i].score;
             userData.detailed.classes.cavalry.time = data.kitStats[i].secondsAs;
           break;
-          
         }
       }
       
